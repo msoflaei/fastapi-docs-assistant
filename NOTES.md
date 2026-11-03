@@ -18,3 +18,9 @@
   Fix: merge sections under 100 words into the following section (staying under 350).
 - 40 chunks exceed 350 words (max 1470) because of long code examples; kept whole,
   since splitting code hurts more and the embedding model's limit is much higher.
+
+## Embeddings
+- Model: BAAI/bge-small-en-v1.5 (open-source, 384 dimensions, 512-token limit), run locally.
+- Chunks longer than the token limit: [your number] of 1059 (truncated; mostly long code examples).
+- Vectors normalized, so cosine similarity = dot product.
+- Queries use the bge retrieval prefix; documents don't.
