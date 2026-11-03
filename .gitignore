@@ -2,3 +2,5 @@ data/raw/
 __pycache__/
 .env
 .DS_Store
+data/processed/
+*.egg-info/
