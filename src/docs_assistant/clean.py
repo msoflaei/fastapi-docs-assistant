@@ -2,10 +2,10 @@
 # The text in triple quotes above is a "docstring": a description of the
 # module. It doesn't run; it's documentation for humans.
 
-import json                 # to write each document as a line of JSON
-import re                   # Python's regular expression (pattern matching) library
-from pathlib import Path    # Path objects make working with file paths easy and safe
-
+import html
+import json
+import re
+from pathlib import Path
 # ---------------------------------------------------------------------------
 # Settings: where to read from and where to write to
 # ---------------------------------------------------------------------------
@@ -123,18 +123,25 @@ def clean_markdown(text: str, md_file: Path) -> str:
     # Step B: go through the document line by line.
     out = []            # the cleaned lines collect here
     in_code = False     # are we currently inside a ``` code block?
+    code_lang = ""      # the language of the current code block, e.g. "python" or "console"
 
-    for line in text.splitlines():      # splitlines() turns the text into a list of lines
-        stripped = line.strip()         # the line without leading/trailing spaces, for checks
+    for line in text.splitlines():
+        stripped = line.strip()
 
-        if stripped.startswith("```"):  # a ``` line opens or closes a code block
-            in_code = not in_code       # flip True <-> False
-            out.append(line)            # keep the ``` line itself
-            continue                    # go to the next line
-
-        if in_code:                     # inside code, we change nothing, since
-            out.append(line)            # "cleaning" could break the code
+        if stripped.startswith("```"):           # a ``` line opens or closes a code block
+            if not in_code:                      # if it's opening a block,
+                # remember its language: "```console" -> "console"
+                code_lang = stripped.lstrip("`").strip().lower()
+            in_code = not in_code                # flip True <-> False
+            out.append(line)
             continue
+
+        if in_code:
+            if code_lang == "console":           # terminal output: remove the coloring HTML
+                line = html.unescape(HTML_TAG_RE.sub("", line))
+            out.append(line)                     # real code (python etc.) is kept untouched
+            continue
+
 
         # Is this line the start of an admonition box (e.g. "/// tip")?
         start = ADMONITION_START_RE.match(stripped)   # returns a match, or None if no match
