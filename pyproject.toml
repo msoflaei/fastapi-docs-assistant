@@ -9,6 +9,8 @@ requires-python = ">=3.11"
 dependencies = [
     "numpy",
     "sentence-transformers",
+    "psycopg[binary]",
+    "pgvector",
 ]
 
 [tool.setuptools.packages.find]

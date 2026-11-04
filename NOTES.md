@@ -24,3 +24,9 @@
 - Chunks longer than the token limit: [your number] of 1059 (truncated; mostly long code examples).
 - Vectors normalized, so cosine similarity = dot product.
 - Queries use the bge retrieval prefix; documents don't.
+
+## Vector database
+- PostgreSQL + pgvector, installed via conda-forge; data stored outside the repo (~/pgdata).
+- Table `chunks` with a vector(384) column and an HNSW index (cosine distance).
+- Database URL read from the DATABASE_URL environment variable, with a local default.
+- Verified: database results match brute-force numpy search on test questions.
