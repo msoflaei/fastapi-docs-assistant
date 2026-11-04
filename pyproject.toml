@@ -13,6 +13,7 @@ dependencies = [
     "pgvector",
     "anthropic",
     "python-dotenv",
+    "fastapi[standard]",
 ]
 
 [tool.setuptools.packages.find]

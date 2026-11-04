@@ -44,3 +44,10 @@
 - max_tokens 2048 (thinking counts toward it); warn if stop_reason is "max_tokens".
 - Out-of-scope test ("connect to MongoDB"): assistant correctly said the docs don't cover it,
   instead of hallucinating; retrieval returned weak matches, generation recognized them.
+
+## API
+- FastAPI app (src/docs_assistant/api.py) with GET /health, POST /search, POST /ask.
+- Embedding model and Anthropic client loaded once at startup via lifespan.
+- Pydantic validates input (question 3-500 chars, k 1-10).
+- Errors: database down -> 503, LLM API failure -> 502.
+- Sync endpoints, since retrieval and LLM calls are blocking; FastAPI runs them in a thread pool.
