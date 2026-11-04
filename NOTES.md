@@ -30,3 +30,17 @@
 - Table `chunks` with a vector(384) column and an HNSW index (cosine distance).
 - Database URL read from the DATABASE_URL environment variable, with a local default.
 - Verified: database results match brute-force numpy search on test questions.
+
+## Retrieval observations (to test with evals later)
+- Release notes chunks appear in results (e.g. "make a parameter optional"); consider excluding them.
+- Some queries return several chunks from the same page; consider limiting results per page.
+
+## Generation
+- Claude via the Anthropic SDK; model set by LLM_MODEL (default claude-haiku-5-5), temperature 0.
+- System prompt rules: answer only from documents, cite as [n], admit when the answer isn't there.
+- Retrieved chunks passed in XML <document> tags with their source URLs.
+- API key in .env (git-ignored); .env.example documents the required settings.
+- Responses can contain thinking blocks before the text; extract only blocks of type "text".
+- max_tokens 2048 (thinking counts toward it); warn if stop_reason is "max_tokens".
+- Out-of-scope test ("connect to MongoDB"): assistant correctly said the docs don't cover it,
+  instead of hallucinating; retrieval returned weak matches, generation recognized them.

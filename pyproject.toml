@@ -11,6 +11,8 @@ dependencies = [
     "sentence-transformers",
     "psycopg[binary]",
     "pgvector",
+    "anthropic",
+    "python-dotenv",
 ]
 
 [tool.setuptools.packages.find]
