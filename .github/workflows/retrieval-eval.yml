@@ -1,0 +1,69 @@
+# Rebuilds the full RAG index from the pinned docs and checks retrieval quality.
+# Fails if hit@5 drops below the threshold (a quality gate).
+name: retrieval-eval
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:          # adds a "Run workflow" button on the Actions tab
+
+jobs:
+  retrieval-eval:
+    runs-on: ubuntu-latest
+
+    # A PostgreSQL database with pgvector, running alongside the job.
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: docs_assistant
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # Our db.py reads this, so the code connects to the CI database with no changes.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/docs_assistant
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+
+      - name: Install CPU-only PyTorch
+        run: |
+          TORCH_VERSION=$(grep -i '^torch==' requirements-lock.txt | cut -d'=' -f3)
+          pip install "torch==${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install the project
+        run: pip install -e ".[dev]" -c requirements-lock.txt
+
+      - name: Build the index (download, clean, chunk, embed, load)
+        run: |
+          bash scripts/download_data.sh
+          python -m docs_assistant.clean
+          python -m docs_assistant.chunk
+          python -m docs_assistant.embed
+          python -m docs_assistant.index
+
+      - name: Integration tests
+        run: pytest -m integration -v
+
+      - name: Retrieval evaluation with quality gate
+        run: python -m docs_assistant.eval_retrieval --label ci --min-hit5 0.90
+
+      - name: Save evaluation results
+        if: always()          # upload even if the gate failed, so you can see why
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrieval-eval-results
+          path: evals/results/retrieval_ci.json

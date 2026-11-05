@@ -17,6 +17,7 @@ from docs_assistant.eval_data import load_questions
 from docs_assistant.retrieve import retrieve
 from docs_assistant.rerank import load_reranker, rerank
 from docs_assistant.retrieve import DEFAULT_EXCLUDE, retrieve
+import sys
 
 RESULTS_DIR = Path("evals/results")
 CUTOFFS = (1, 3, 5, 10)                 # the k values we report metrics at
@@ -51,6 +52,8 @@ def main() -> None:
                         help="doc_id patterns to exclude (default: the app's defaults; pass --exclude alone for none)")
     parser.add_argument("--rerank", action="store_true", help="rerank candidates with a cross-encoder")
     parser.add_argument("--candidates", type=int, default=30, help="how many chunks to fetch before reranking")
+    parser.add_argument("--min-hit5", type=float,
+                        help="quality gate: exit with an error if hit@5 is below this value")
     args = parser.parse_args()
 
     questions = [q for q in load_questions() if q["category"] == "in_scope"]
@@ -108,6 +111,15 @@ def main() -> None:
     }, indent=2))
     print(f"\nSaved -> {out_file}")
 
+ # Quality gate: a non-zero exit code makes the CI job fail.
+    if args.min_hit5 is not None:
+        if summary["hit@5"] < args.min_hit5:
+            print(f"\nQUALITY GATE FAILED: hit@5 {summary['hit@5']:.3f} < {args.min_hit5:.3f}")
+            sys.exit(1)
+        print(f"\nQuality gate passed: hit@5 {summary['hit@5']:.3f} >= {args.min_hit5:.3f}")
+
 
 if __name__ == "__main__":
     main()
+
+       
