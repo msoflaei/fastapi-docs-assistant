@@ -51,3 +51,11 @@
 - Pydantic validates input (question 3-500 chars, k 1-10).
 - Errors: database down -> 503, LLM API failure -> 502.
 - Sync endpoints, since retrieval and LLM calls are blocking; FastAPI runs them in a thread pool.
+
+## Testing
+- pytest; unit tests for cleaning, chunking, prompt building, and answer extraction.
+- API tests use monkeypatch to replace the model, database, and LLM with fakes: fast, free, offline.
+- Error paths tested: database down -> 503, LLM failure -> 502, invalid input -> 422.
+- Regression tests for bugs found during development (console HTML, thinking blocks, temperature).
+- Integration tests (real database + model) marked and run separately: pytest -m integration.
+- Exact versions recorded in requirements-lock.txt.

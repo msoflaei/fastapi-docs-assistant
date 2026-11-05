@@ -103,7 +103,7 @@ def resolve_include(rel_path: str, md_file: Path, fenced: bool) -> str:
             # \n means "new line".
 
     # If we get here, neither location had the file.
-    print(f"Missing include in {md_file.relative_to(DOCS_DIR)}: {rel_path}")
+    print(f"Missing include in {md_file}: {rel_path}")
     stats["includes_missing"] += 1                # count a failure
     return ""                                     # replace the pointer with nothing
 
