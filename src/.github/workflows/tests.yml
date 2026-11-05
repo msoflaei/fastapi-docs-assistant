@@ -1,0 +1,36 @@
+# Runs the unit and API tests on every push and pull request.
+name: tests
+
+on:                      # when this workflow runs
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest           # a fresh Linux machine provided by GitHub
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4    # downloads your repository onto the machine
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"     # the same version as your conda environment
+          cache: pip                 # reuse downloaded packages between runs (faster)
+          cache-dependency-path: requirements-lock.txt
+
+      # The default PyTorch download for Linux includes GPU support and is several GB.
+      # Tests don't need a GPU, so we install the much smaller CPU-only build,
+      # at the exact version recorded in the lock file.
+      - name: Install CPU-only PyTorch
+        run: |
+          TORCH_VERSION=$(grep -i '^torch==' requirements-lock.txt | cut -d'=' -f3)
+          pip install "torch==${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu
+
+      # -c requirements-lock.txt "constrains" every package to the version in the lock file,
+      # so CI tests exactly the versions you developed with.
+      - name: Install the project
+        run: pip install -e ".[dev]" -c requirements-lock.txt
+
+      - name: Run tests
+        run: pytest -v

@@ -132,3 +132,14 @@ Experiments:
   0 invalid citations, 3.1 s. Fixed q05 and q19 (Group B), as predicted; q09 still fails.
   Correctness gain matches the hypothesis -> adopt k=8, pending a repeat run.
 - To do: repeat k8 run to confirm; validate judge on 10 answers.
+- Repeated runs (3 each):
+  | Metric | k=5 mean (range) | k=8 mean (range) |
+  |---|---|---|
+  | Fully correct | 0.883 (0.875-0.900) | 0.908 (0.900-0.925) |
+  | Point coverage | 0.895 (0.887-0.912) | 0.908 (0.900-0.925) |
+  | Faithful | 0.833 (0.800-0.875) | 0.817 (0.750-0.850) |
+  | False refusals | 1.67 (1-2) | 0.67 (0-1) |
+- k=8 at least as good as k=5 on correctness in every run; average gain +2.5 points (~1 question),
+  half of what the single run suggested (+5). Faithfulness difference within noise.
+- Decision: k=8 adopted as DEFAULT_K (used by the API, CLI, and evals).
+  Trade-off: about 60% more input tokens per question.
