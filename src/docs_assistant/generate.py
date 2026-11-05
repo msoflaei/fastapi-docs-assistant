@@ -7,7 +7,7 @@ from dotenv import load_dotenv          # reads settings from the .env file
 
 from docs_assistant.db import connect
 from docs_assistant.embed import load_model
-from docs_assistant.retrieve import retrieve
+from docs_assistant.retrieve import DEFAULT_K, retrieve
 
 load_dotenv()   # copies the values in .env into environment variables, where the SDK finds the key
 
@@ -67,7 +67,7 @@ def main() -> None:
     client = Anthropic()                 # reads ANTHROPIC_API_KEY from the environment
 
     with connect() as conn:
-        chunks = retrieve(question, model, conn, k=5)    # step 1: retrieval
+        chunks = retrieve(question, model, conn, k=DEFAULT_K)    # step 1: retrieval
     answer = generate_answer(question, chunks, client)   # step 2: generation
 
     print(f"Question: {question}\n")

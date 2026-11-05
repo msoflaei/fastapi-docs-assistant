@@ -10,6 +10,10 @@ from docs_assistant.search import QUERY_PREFIX
 # release notes mention many features briefly; reference pages are thin pointers in our data.
 DEFAULT_EXCLUDE = ("release-notes", "reference/%")
 
+# Number of chunks given to the LLM, chosen by answer evaluation (see NOTES.md):
+# k=8 beat k=5 on correctness in all 3 repeated runs (+2.5 points on average).
+DEFAULT_K = 8
+
 # <=> is pgvector's cosine DISTANCE operator; 1 - distance is cosine SIMILARITY.
 # The WHERE clause filters out excluded pages while searching (a metadata filter).
 # ::text[] tells PostgreSQL the parameter is a list of text values.

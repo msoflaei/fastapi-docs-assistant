@@ -22,7 +22,7 @@ from docs_assistant.db import connect
 from docs_assistant.embed import load_model
 from docs_assistant.eval_data import load_questions
 from docs_assistant.generate import MODEL, build_prompt, generate_answer, response_text  # also loads .env
-from docs_assistant.retrieve import retrieve
+from docs_assistant.retrieve import DEFAULT_K, retrieve
 
 RESULTS_DIR = Path("evals/results")
 JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "claude-sonnet-5-5")
@@ -112,7 +112,7 @@ def judge(client: Anthropic, question: str, chunks: list[dict], answer: str, poi
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate answer quality with an LLM judge.")
     parser.add_argument("--label", default="baseline")
-    parser.add_argument("--k", type=int, default=5, help="chunks retrieved per question")
+    parser.add_argument("--k", type=int, default=DEFAULT_K, help="chunks retrieved per question")
     parser.add_argument("--limit", type=int, help="only evaluate the first N questions (for quick tests)")
     args = parser.parse_args()
 
