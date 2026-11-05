@@ -122,3 +122,13 @@ Baseline results (Haiku, k=5):
   C. Faithfulness slips (q01, q03, q15, q39): correct facts added from model knowledge,
      not from the documents -> candidate for a stricter prompt.
 - q24 label demanded "version", which the question didn't ask for -> label fixed, baseline rerun.
+
+Experiments:
+- baseline-v2 (q24 label fixed, otherwise identical): fully correct 87.5%, coverage 88.7%,
+  faithful 80% (8 partial), 2 false refusals, 1 invalid citation, 2.92 s.
+  Faithfulness changed on 8 questions with no system change -> run-to-run variance from
+  non-deterministic generation and judging. Faithfulness differences of a few points are noise.
+- k=8: fully correct 92.5%, coverage 92.5%, faithful 85% (6 partial), 1 false refusal,
+  0 invalid citations, 3.1 s. Fixed q05 and q19 (Group B), as predicted; q09 still fails.
+  Correctness gain matches the hypothesis -> adopt k=8, pending a repeat run.
+- To do: repeat k8 run to confirm; validate judge on 10 answers.
