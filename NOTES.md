@@ -143,3 +143,8 @@ Experiments:
   half of what the single run suggested (+5). Faithfulness difference within noise.
 - Decision: k=8 adopted as DEFAULT_K (used by the API, CLI, and evals).
   Trade-off: about 60% more input tokens per question.
+
+## Continuous integration
+- GitHub Actions (.github/workflows/tests.yml): unit and API tests on every push and pull request.
+- CPU-only PyTorch on CI to avoid multi-GB GPU builds; versions constrained by requirements-lock.txt.
+- No secrets or database needed: the LLM, model, and database are mocked in these tests.
