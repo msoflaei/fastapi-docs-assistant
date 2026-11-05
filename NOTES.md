@@ -61,7 +61,7 @@
 - Exact versions recorded in requirements-lock.txt.
 
 ## Evaluation dataset
-- evals/questions.jsonl: [N] questions ([X] in scope, [Y] out of scope), hand-verified against the docs.
+- evals/questions.jsonl: 45 questions (40 in scope, 5 out of scope), hand-verified against the docs.
 - Labels at page level (relevant_docs), so the dataset survives chunking changes.
 - answer_points: key facts a correct answer must contain (used for answer grading).
 - Validated by docs_assistant.eval_data (unknown page IDs, duplicates, missing fields).
@@ -103,3 +103,22 @@ Findings and decisions:
 - Final default config: vector search, k=5, excluding release-notes and reference/%.
   Defined in retrieve.DEFAULT_EXCLUDE and used by the API, generate.py, and the evaluation.
 - To check: whether how-to/custom-docs-ui-assets should be an additional relevant page for q15.
+
+## Answer evaluation
+
+Method:
+- 45 questions answered (Haiku, k=5), graded by an LLM judge (Sonnet) plus code checks.
+- Code checks: refusal detection, citation validity (code blocks excluded).
+- Judge: answer-point coverage and faithfulness (yes/partial/no), JSON output, retries on bad output.
+- Judge validation: 8 of 10 manually reviewed answers agreed with the judge.
+
+Baseline results (Haiku, k=5):
+- Fully correct 85% (34/40), point coverage 86.3%, faithful 87.5% (5 partial, 0 unfaithful),
+  out-of-scope refused 5/5, 0 invalid citations, 2 false refusals, 3.0 s/answer.
+- Failures fall into three groups:
+  A. Retrieval misses (q04, q10): honest refusal or partial answer. Same as retrieval eval misses.
+  B. Right page, wrong chunk (q05, q09, q19): explanation chunk retrieved, code chunk not.
+     Invisible to page-level retrieval metrics -> test k=8.
+  C. Faithfulness slips (q01, q03, q15, q39): correct facts added from model knowledge,
+     not from the documents -> candidate for a stricter prompt.
+- q24 label demanded "version", which the question didn't ask for -> label fixed, baseline rerun.

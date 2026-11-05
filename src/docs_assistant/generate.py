@@ -39,6 +39,9 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
     )
     return f"<documents>\n{docs}\n</documents>\n\nQuestion: {question}"
 
+def response_text(response) -> str:
+    """Join the text blocks of a Claude response, skipping other block types like thinking."""
+    return "".join(block.text for block in response.content if block.type == "text")
 
 def generate_answer(question: str, chunks: list[dict], client: Anthropic) -> str:
     """Send the prompt to the LLM and return its answer text."""
@@ -50,7 +53,7 @@ def generate_answer(question: str, chunks: list[dict], client: Anthropic) -> str
     )
     # The response is a list of content blocks of different types (e.g. "thinking", then "text").
     # Keep only the text blocks and join them, rather than assuming the first block is the answer.
-    answer = "".join(block.text for block in response.content if block.type == "text")
+    answer = response_text(response)
 
     # If the model hit the length limit, the answer may be cut off; warn so we notice.
     if response.stop_reason == "max_tokens":

@@ -1,0 +1,118 @@
+{
+  "label": "smoke",
+  "timestamp": "2026-11-05T10:57:14",
+  "answer_model": "claude-haiku-5-5",
+  "judge_model": "claude-sonnet-5-5",
+  "k": 5,
+  "summary": {
+    "in_scope": {
+      "n": 3,
+      "point_coverage": 1.0,
+      "fully_correct": 1,
+      "faithful": 1,
+      "partially_faithful": 0,
+      "unfaithful": 0,
+      "false_refusals": 0,
+      "answers_without_citations": 0,
+      "answers_with_invalid_citations": 0
+    },
+    "avg_answer_seconds": 2.53,
+    "judge_errors": 0
+  },
+  "per_question": [
+    {
+      "id": "q01",
+      "category": "in_scope",
+      "question": "How do I start my app locally so it reloads when I change the code?",
+      "answer": "Run `fastapi dev`. Development mode has **auto-reload** enabled by default, so the server restarts when you change your code [1]:\n\n```console\n$ fastapi dev\n```\n\nIt also listens on `127.0.0.1`, meaning only your own machine can reach it [1].\n\nIf you're running Uvicorn directly instead, it supports a `--reload` option for development [2]:\n\n```console\n$ uv run uvicorn main:app --reload\n```\n\nHere, `main:app` means the `app` object created in `main.py` [2].\n\nAuto-reload uses more resources and is less stable, so use it only during development, not in production [1][2].",
+      "sources": [
+        "fastapi-cli#2",
+        "deployment/manually#3",
+        "deployment/concepts#3",
+        "deployment/concepts#5",
+        "deployment/concepts#4"
+      ],
+      "answer_points": [
+        "use the fastapi dev command",
+        "auto-reload is enabled in development mode"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "yes",
+      "judge_explanation": "The answer recommends `fastapi dev` and says auto-reload is enabled by default. All claims are supported by the documents; the `uvicorn main:app --reload` command combines the documented `--reload` option with the documented `main:app` syntax.",
+      "refused": false,
+      "cited": [
+        1,
+        2
+      ],
+      "invalid_citations": [],
+      "seconds": 3.27
+    },
+    {
+      "id": "q02",
+      "category": "in_scope",
+      "question": "How can I make a query parameter optional?",
+      "answer": "You make a query parameter optional by giving it a default value, most commonly `None`. Declaring a default value for a non-path parameter makes it not required [1]. For example:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: str, q: str | None = None):\n    if q:\n        return {\"item_id\": item_id, \"q\": q}\n    return {\"item_id\": item_id}\n```\n\nHere, the function parameter `q` is optional and is `None` by default [4].\n\nSome things to keep in mind:\n\n- **Using `| None` alone does not make a parameter optional.** Without a default value, the parameter is still required [2][1]. For example, `q: Annotated[str | None, Query(min_length=3)]` is required, and you need `= None` to make it optional [2].\n- **You can also set a non-None default.** For example, `skip: int = 0` is optional and uses `0` when the client omits it [1][4].\n- **Optional query parameter models work similarly.** Declare the model with `| None` and a default of `None` [3].\n\nFor new code, the document recommends putting `Query` inside `Annotated`. Older code used `Query` as the default value, such as `q: str | None = Query(default=None, max_length=50)`, which has the same effect of making the parameter optional [5].",
+      "sources": [
+        "tutorial/query-params#4",
+        "tutorial/query-params-str-validations#7",
+        "tutorial/query-param-models#3",
+        "tutorial/query-params#1",
+        "tutorial/query-params-str-validations#3"
+      ],
+      "answer_points": [
+        "give it a default value of None",
+        "for example: str | None = None"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "yes",
+      "judge_explanation": "The answer states that a default of `None` makes a query parameter optional and gives `q: str | None = None` as the example. Every claim, including the `| None` caveat, the `skip: int = 0` default, query parameter models, and the old `Query(default=None)` style, is supported by the documents.",
+      "refused": false,
+      "cited": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "invalid_citations": [],
+      "seconds": 2.32
+    },
+    {
+      "id": "q03",
+      "category": "in_scope",
+      "question": "How do I read a value from the URL path, like an item ID?",
+      "answer": "You declare a path parameter by putting the variable name in braces in the route path, and FastAPI passes that value to your function as an argument with the same name [1]:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id):\n    return {\"item_id\": item_id}\n```\n\nFor example, requesting `http://127.0.0.1:8000/items/foo` returns `{\"item_id\":\"foo\"}` [1].\n\nYou can also declare the type using standard Python type annotations, such as `item_id: int`, which gives you editor support and error checks inside your function [1].\n\nTo add metadata or validation, you can use `Path` with `Annotated`. For example, `ge=1` requires the integer to be greater than or equal to 1 [3]:\n\n```python\nfrom typing import Annotated\n\nfrom fastapi import FastAPI, Path\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_items(\n    item_id: Annotated[int, Path(title=\"The ID of the item to get\", ge=1)], q: str\n):\n    results = {\"item_id\": item_id}\n    if q:\n        results.update({\"q\": q})\n    return results\n```\n\nA path parameter is always required because it is part of the URL path, so adding `None` to its type does not make it optional [2].",
+      "sources": [
+        "tutorial/path-params#0",
+        "tutorial/path-params-numeric-validations#1",
+        "tutorial/path-params-numeric-validations#4",
+        "tutorial/path-params-numeric-validations#2",
+        "tutorial/body#2"
+      ],
+      "answer_points": [
+        "declare it in the path with curly braces, e.g. /items/{item_id}",
+        "add a function parameter with the same name"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "yes",
+      "judge_explanation": "The answer states that the variable goes in braces in the route path and is passed to a function argument of the same name. All claims, including the Path/ge=1 example and the required-parameter note, are supported by the documents.",
+      "refused": false,
+      "cited": [
+        1,
+        2,
+        3
+      ],
+      "invalid_citations": [],
+      "seconds": 2.0
+    }
+  ]
+}
