@@ -59,3 +59,9 @@
 - Regression tests for bugs found during development (console HTML, thinking blocks, temperature).
 - Integration tests (real database + model) marked and run separately: pytest -m integration.
 - Exact versions recorded in requirements-lock.txt.
+
+## Evaluation dataset
+- evals/questions.jsonl: [N] questions ([X] in scope, [Y] out of scope), hand-verified against the docs.
+- Labels at page level (relevant_docs), so the dataset survives chunking changes.
+- answer_points: key facts a correct answer must contain (used for answer grading).
+- Validated by docs_assistant.eval_data (unknown page IDs, duplicates, missing fields).
