@@ -148,3 +148,9 @@ Experiments:
 - GitHub Actions (.github/workflows/tests.yml): unit and API tests on every push and pull request.
 - CPU-only PyTorch on CI to avoid multi-GB GPU builds; versions constrained by requirements-lock.txt.
 - No secrets or database needed: the LLM, model, and database are mocked in these tests.
+- FastAPI docs pinned to commit [first 7 characters of your commit ID] in download_data.sh;
+  full rebuild reproduced identical results (156 docs, 1059 chunks, hit@5 0.950).
+- retrieval-eval workflow: rebuilds the index from scratch on CI with a pgvector service
+  container, runs integration tests, then the retrieval eval with a quality gate (hit@5 >= 0.90).
+  Results uploaded as an artifact.
+- Answer evaluation stays manual: it costs money and varies between runs.
