@@ -65,3 +65,41 @@
 - Labels at page level (relevant_docs), so the dataset survives chunking changes.
 - answer_points: key facts a correct answer must contain (used for answer grading).
 - Validated by docs_assistant.eval_data (unknown page IDs, duplicates, missing fields).
+
+## Retrieval evaluation (40 in-scope questions)
+
+Metrics: hit@k (any relevant page in top k), recall@k (share of relevant pages in top k),
+MRR (rewards ranking the first relevant result high).
+
+| Run | hit@1 | hit@3 | hit@5 | recall@5 | hit@10 | MRR | ms/question |
+|---|---|---|---|---|---|---|---|
+| baseline | 0.750 | 0.875 | 0.950 | 0.912 | 0.950 | 0.825 | 64 |
+| exclude release notes | 0.750 | 0.900 | 0.950 | 0.912 | 0.950 | 0.832 | 39 |
+| exclude release notes + reference | 0.750 | 0.925 | 0.950 | 0.912 | 0.950 | 0.834 | 50 |
+| exclude release notes + rerank | 0.700 | 0.925 | 0.950 | 0.938 | 1.000 | 0.819 | 642 |
+| exclude both + rerank | 0.700 | 0.925 | 0.950 | 0.938 | 1.000 | 0.820 | 636 |
+| final (exclude both, no rerank) | 0.750 | 0.925 | 0.950 | 0.912 | 0.950 | 0.834 | 44 |
+
+Findings and decisions:
+- Baseline was already strong (hit@5 0.95); the weak spot was ranking (hit@1 0.75).
+- Excluding release notes: +1 question at hit@3 (with 40 questions, 1 question = 2.5 points,
+  so not significant), no regressions, faster. Adopted; trade-off: can't answer
+  version-history questions.
+- Excluding reference pages (25 chunks): these are short pointer pages whose real content
+  (API docs generated from source code) isn't in our data. Moved q15 from rank 4 to 3,
+  nothing else changed. Adopted.
+- Reranking (cross-encoder/ms-marco-MiniLM-L-6-v2, 30 candidates): per-question comparison
+  showed 12 of 40 questions changed, 5 better, 7 worse. Gains were large (q10 not found -> 2,
+  q04 not found -> 8, q35 5 -> 1); most losses were small (rank 1 -> 2). Since the LLM reads
+  all 5 chunks, hit@5/recall@5 matter more than hit@1/MRR for us. Not adopted: same hit@5,
+  +0.026 recall@5 (about 1 question), 13x slower. Kept as an option (--rerank) for testing
+  a larger reranker later.
+- Hypothesis "excluding reference pages gives the reranker a fair second chance" was not
+  confirmed: rerank results barely changed.
+- Remaining misses (q04 "JSON in a POST request" -> Request Body; q10 "share common logic"
+  -> Dependencies) are vocabulary mismatches. Hybrid (keyword) search deprioritized, since
+  it helps when words match exactly, not when they differ. The agent (Stage 3) can rephrase
+  and search again, which targets this directly.
+- Final default config: vector search, k=5, excluding release-notes and reference/%.
+  Defined in retrieve.DEFAULT_EXCLUDE and used by the API, generate.py, and the evaluation.
+- To check: whether how-to/custom-docs-ui-assets should be an additional relevant page for q15.
