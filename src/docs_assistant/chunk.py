@@ -10,12 +10,13 @@ Strategy (structure-aware chunking):
 import json                 # to read and write JSON Lines files
 import re                   # regular expressions, to recognize headings
 from pathlib import Path    # convenient file paths
+import os
 
 IN_FILE = Path("data/processed/docs.jsonl")      # output of the cleaning step
 OUT_FILE = Path("data/processed/chunks.jsonl")   # where chunks will be written
 MAX_WORDS = 350   # target maximum chunk size (about 450 tokens; 1 word is roughly 1.3 tokens)
 MIN_WORDS = 30    # chunks smaller than this get counted as "tiny" in the report
-MERGE_BELOW = 100  # a section smaller than this gets merged with the section after it
+MERGE_BELOW = int(os.environ.get("MERGE_BELOW", 100))  # a section smaller than this gets merged with the next 
 
 # Matches a heading line like "### Check it { #check-it }"
 #   ^(#{1,6})      CAPTURE 1 to 6 "#" characters (the heading level)

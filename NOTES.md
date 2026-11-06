@@ -208,3 +208,29 @@ Conclusion:
 - The agent trades ~2x cost and ~1 s latency for about +9 points of correctness (100% vs ~91%).
   Both are offered in the API: /ask (fast, cheap) and /agent (thorough). The /agent response
   includes the trace (tool calls) and token usage. Tested with a mocked agent.
+
+
+## Framework comparison: LlamaIndex (retrieval evaluation, 40 in-scope questions)
+| | Hand-built (merged) | Hand-built (no merge) | LlamaIndex Markdown | LlamaIndex defaults (1024) |
+|---|---|---|---|---|
+| Chunks | 1,059 | 2,017 | 1,156 | 381 |
+| Median words | 168 | 72 | 91 | 451 |
+| hit@1 | 0.750 | 0.750 | 0.850 | 0.750 |
+| hit@5 | 0.950 | 0.950 | 0.950 | 0.950 |
+| recall@5 | 0.912 | 0.938 | 0.938 | 0.912 |
+| MRR | 0.834 | 0.847 | 0.896 | 0.841 |
+- Same cleaned docs, embedding model, query prefix, database, and exclusions; LlamaIndex did
+  chunking, indexing, and retrieval (~45 lines vs 338).
+- LlamaIndex Markdown matched hit@5 and ranked better (hit@1 +0.10 = 4 questions; MRR +0.062).
+- Hypothesis "our merging of small sections hurts ranking": only partly confirmed. No-merge
+  improved MRR by 0.013 and recall@5 to 0.938, but hit@1 unchanged. The remaining gap is likely
+  from different splitting (2,017 vs 1,156 chunks) and metadata embedding; not isolated further.
+- The merge decision (Step 13) was made from size statistics before the eval set existed;
+  re-testing it with retrieval metrics showed a small cost.
+- LlamaIndex defaults: 1,024-token chunks exceed the model's 512-token limit (median 451 words),
+  so chunk endings are invisible to search. Page-level metrics favor big chunks.
+- Other framework issues: metadata embedded by default, API differs from tutorials (hnsw_kwargs),
+  no section-level citation links, heading anchors left in text, many extra dependencies.
+- Not adopted: chunking changes would need answer evaluation (smaller chunks may bring back
+  "right page, wrong chunk"), which requires API credit. Promising lead for future work.
+- Main index rebuilt afterwards; final-check matched final exactly.

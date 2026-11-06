@@ -21,6 +21,11 @@ where = ["src"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
+frameworks = [
+    "llama-index-core",
+    "llama-index-embeddings-huggingface",
+    "llama-index-vector-stores-postgres",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
