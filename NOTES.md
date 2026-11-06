@@ -154,3 +154,11 @@ Experiments:
   container, runs integration tests, then the retrieval eval with a quality gate (hit@5 >= 0.90).
   Results uploaded as an artifact.
 - Answer evaluation stays manual: it costs money and varies between runs.
+
+## Agent
+- DocsAgent: Claude in a tool-use loop with search_docs(query) and read_page(doc_id).
+- Guardrails: max 6 model calls per question, tool errors returned to the model as text,
+  long pages truncated at 15,000 characters.
+- Trace (every tool call) and token usage recorded per question, for evaluation.
+- Source numbers stay stable across multiple searches, so citations remain valid.
+- System prompt kept general: no hints targeting specific eval questions (avoids overfitting).
