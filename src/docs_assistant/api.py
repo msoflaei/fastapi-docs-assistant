@@ -10,6 +10,7 @@ from docs_assistant.db import connect
 from docs_assistant.embed import load_model
 from docs_assistant.generate import MODEL, generate_answer   # importing generate also loads .env
 from docs_assistant.retrieve import DEFAULT_K, retrieve
+from docs_assistant.agent import DocsAgent
 
 # Shared resources, created once when the server starts. Loading the embedding
 # model takes seconds, so we must not do it on every request.
@@ -60,6 +61,30 @@ class AskResponse(BaseModel):
 
 class SearchResponse(BaseModel):
     results: list[Source]
+
+class AgentRequest(BaseModel):
+    question: str = Field(min_length=3, max_length=500,
+                          examples=["How can I share common logic across several endpoints?"])
+
+
+class AgentStep(BaseModel):
+    tool: str           # which tool the agent used, e.g. "search_docs"
+    input: dict         # what it passed to the tool, e.g. {"query": "dependencies"}
+
+
+class AgentSource(BaseModel):
+    index: int
+    section: str
+    url: str
+
+
+class AgentResponse(BaseModel):
+    answer: str
+    sources: list[AgentSource]
+    steps: list[AgentStep]          # the trace: lets the caller see how the answer was found
+    usage: dict                     # input and output tokens, for cost monitoring
+    stopped: bool                   # True if the agent hit its step limit
+    model: str
 
 
 # ---------------------------------------------------------------------------
@@ -116,3 +141,24 @@ def ask(req: AskRequest) -> AskResponse:
         # 502 = Bad Gateway: a service we depend on (the LLM API) failed
         raise HTTPException(status_code=502, detail=f"LLM request failed: {type(e).__name__}")
     return AskResponse(answer=answer, sources=to_sources(chunks), model=MODEL)
+
+@app.post("/agent", response_model=AgentResponse)
+def ask_agent(req: AgentRequest) -> AgentResponse:
+    """Answer with the tool-using agent: slower and costlier than /ask,
+    but more accurate on hard questions (see the evaluation in NOTES.md)."""
+    try:
+        # The connection stays open for the whole run, since the agent's tools use it.
+        with connect() as conn:
+            result = DocsAgent(state["model"], state["client"], conn).run(req.question)
+    except psycopg.OperationalError:
+        raise HTTPException(status_code=503, detail="Database unavailable")
+    except anthropic.APIError as e:
+        raise HTTPException(status_code=502, detail=f"LLM request failed: {type(e).__name__}")
+    return AgentResponse(
+        answer=result["answer"],
+        sources=result["sources"],
+        steps=result["steps"],
+        usage=result["usage"],
+        stopped=result["stopped"],
+        model=MODEL,
+    )

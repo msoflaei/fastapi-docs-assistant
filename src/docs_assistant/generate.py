@@ -43,22 +43,25 @@ def response_text(response) -> str:
     """Join the text blocks of a Claude response, skipping other block types like thinking."""
     return "".join(block.text for block in response.content if block.type == "text")
 
-def generate_answer(question: str, chunks: list[dict], client: Anthropic) -> str:
-    """Send the prompt to the LLM and return its answer text."""
+def generate_answer_with_usage(question: str, chunks: list[dict], client: Anthropic) -> tuple[str, dict]:
+    """Send the prompt to the LLM; return the answer text and the token usage."""
     response = client.messages.create(
         model=MODEL,
         max_tokens=2048,         # upper limit on output length; thinking counts toward it too
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": build_prompt(question, chunks)}],
     )
-    # The response is a list of content blocks of different types (e.g. "thinking", then "text").
-    # Keep only the text blocks and join them, rather than assuming the first block is the answer.
     answer = response_text(response)
-
-    # If the model hit the length limit, the answer may be cut off; warn so we notice.
     if response.stop_reason == "max_tokens":
         answer += "\n\n[Warning: answer was cut off because it reached max_tokens]"
-    return answer
+    usage = getattr(response, "usage", None)      # getattr with a default: test fakes may have no usage
+    tokens = {"input_tokens": usage.input_tokens, "output_tokens": usage.output_tokens} if usage else {}
+    return answer, tokens
+
+
+def generate_answer(question: str, chunks: list[dict], client: Anthropic) -> str:
+    """Send the prompt to the LLM and return its answer text."""
+    return generate_answer_with_usage(question, chunks, client)[0]
 
 
 def main() -> None:

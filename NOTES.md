@@ -171,3 +171,40 @@ Experiments:
 - After the prompt fix: all 4 answers cited numbers; MongoDB answer gave the exact refusal plus
   one cited sentence, in 2 searches (13.8k tokens, down from 20.6k). q10 now shows a dependency
   class with Depends(). The agent's path varies between runs (q04: search + read_page, then 2 searches).
+
+## Agent evaluation (45 questions, judge Sonnet)
+
+| Metric | RAG k=8 (3 runs) | Agent r1 | Agent r2 |
+|---|---|---|---|
+| Fully correct | 0.908 (0.900-0.925) | 1.000 | 1.000 |
+| Point coverage | 0.908 (0.900-0.925) | 1.000 | 1.000 |
+| Faithful | 0.817 (0.750-0.850) | 0.850 | 0.700 |
+| False refusals | 0.67 | 0 | 0 |
+| Out-of-scope refused | 5/5 | 5/5 | 5/5 |
+| Avg tool calls | 1 (fixed) | 1.62 | 1.56 |
+| Avg input tokens | ~3,200 (estimated, chars/4) | 7,197 | 6,890 |
+| Avg seconds | ~3 | 4.24 | 3.89 |
+
+Findings:
+- Correctness: the agent fixed every remaining RAG failure (q04, q10: vocabulary mismatch;
+  q05, q09, q19: right page, wrong chunk) and was 100% fully correct in both runs.
+  A large, consistent gain (~4 questions).
+- Faithfulness: not improved (mean 0.775 vs 0.817, within noise). Longer answers combining
+  more documents give more room for small slips (misattributed citations, simplified code,
+  calling something "recommended"). q03's "convert and validate" slip appears with both RAG
+  and the agent: it's the answering model's habit, not a retrieval issue.
+- Efficiency: ~1.6 tool calls per question, never hit the step limit, ~1 s slower than RAG.
+- Cost: agent ~7,000 input tokens/question (measured) vs RAG ~3,200 (estimated with
+  scripts/estimate_rag_tokens.py) -> ~2.2x. Caveats: chars/4 is approximate (code may use
+  more tokens per character); output tokens not compared, and the agent writes longer
+  answers (~600 output tokens).
+- 100% correctness means the eval set no longer discriminates between agent versions:
+  harder, multi-part questions are needed for future comparisons.
+- Limitations: a third agent run stopped at q32 when API credit ran out; the eval script
+  saves results only at the end, so partial results were lost (improvement: save
+  incrementally). RAG tokens estimated rather than measured, since credit wasn't topped up.
+
+Conclusion:
+- The agent trades ~2x cost and ~1 s latency for about +9 points of correctness (100% vs ~91%).
+  Both are offered in the API: /ask (fast, cheap) and /agent (thorough). The /agent response
+  includes the trace (tool calls) and token usage. Tested with a mocked agent.

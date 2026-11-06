@@ -21,8 +21,9 @@ from anthropic import Anthropic
 from docs_assistant.db import connect
 from docs_assistant.embed import load_model
 from docs_assistant.eval_data import load_questions
-from docs_assistant.generate import MODEL, build_prompt, generate_answer, response_text  # also loads .env
 from docs_assistant.retrieve import DEFAULT_K, retrieve
+from docs_assistant.agent import DocsAgent
+from docs_assistant.generate import MODEL, build_prompt, generate_answer_with_usage, response_text  # also loads .env
 
 RESULTS_DIR = Path("evals/results")
 JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "claude-sonnet-5-5")
@@ -114,6 +115,8 @@ def main() -> None:
     parser.add_argument("--label", default="baseline")
     parser.add_argument("--k", type=int, default=DEFAULT_K, help="chunks retrieved per question")
     parser.add_argument("--limit", type=int, help="only evaluate the first N questions (for quick tests)")
+    parser.add_argument("--mode", choices=["rag", "agent"], default="rag",
+                        help="plain RAG pipeline or the tool-using agent")
     args = parser.parse_args()
 
     questions = load_questions()[: args.limit]          # [:None] keeps all of them
@@ -123,12 +126,22 @@ def main() -> None:
 
     results = []
     with connect() as conn:
+        agent = DocsAgent(model, client, conn) if args.mode == "agent" else None
         for q in questions:
-            chunks = retrieve(q["question"], model, conn, k=args.k)
             start = time.perf_counter()
-            answer = generate_answer(q["question"], chunks, client)
-            seconds = time.perf_counter() - start
+            if agent:
+                run = agent.run(q["question"])
+                answer, chunks, usage = run["answer"], run["documents"], run["usage"]
+                tool_calls, stopped = len(run["steps"]), run["stopped"]
+                sources = [s["url"] for s in run["sources"]]
+            else:
+                chunks = retrieve(q["question"], model, conn, k=args.k)
+                answer, usage = generate_answer_with_usage(q["question"], chunks, client)
+                tool_calls, stopped = 0, False
+                sources = [c["chunk_id"] for c in chunks]
+            seconds = time.perf_counter() - start     # now includes retrieval, for a fair comparison
 
+            # The judge sees exactly the documents the system saw, numbered as it cited them.
             cited = cited_numbers(answer)
             verdict = judge(client, q["question"], chunks, answer, q["answer_points"])
             result = {
@@ -136,7 +149,7 @@ def main() -> None:
                 "category": q["category"],
                 "question": q["question"],
                 "answer": answer,
-                "sources": [c["chunk_id"] for c in chunks],
+                "sources": sources,
                 "answer_points": q["answer_points"],
                 "points_covered": verdict["points"],
                 "faithfulness": verdict["faithfulness"],
@@ -144,11 +157,16 @@ def main() -> None:
                 "refused": is_refusal(answer),
                 "cited": sorted(cited),
                 "invalid_citations": sorted(n for n in cited if not 1 <= n <= len(chunks)),
+                "tool_calls": tool_calls,
+                "stopped": stopped,
+                "input_tokens": usage.get("input_tokens", 0),
+                "output_tokens": usage.get("output_tokens", 0),
                 "seconds": round(seconds, 2),
             }
             results.append(result)
             print(f"{q['id']}  points {sum(result['points_covered'])}/{len(result['points_covered'])}  "
-                  f"faithful: {result['faithfulness']:<7}  refused: {result['refused']}")
+                  f"faithful: {result['faithfulness']:<7}  refused: {result['refused']}  "
+                  f"tools: {tool_calls}")
 
     # ---- Summary ----
     ins = [r for r in results if r["category"] == "in_scope"]
@@ -173,6 +191,10 @@ def main() -> None:
             "judge_all_points": round(mean(all(r["points_covered"]) for r in oos), 3),
         }
     summary["avg_answer_seconds"] = round(mean(r["seconds"] for r in results), 2)
+    summary["avg_input_tokens"] = round(mean(r["input_tokens"] for r in results))
+    summary["avg_output_tokens"] = round(mean(r["output_tokens"] for r in results))
+    summary["avg_tool_calls"] = round(mean(r["tool_calls"] for r in results), 2)
+    summary["stopped_at_limit"] = sum(r["stopped"] for r in results)
     summary["judge_errors"] = sum(r["faithfulness"] == "error" for r in results)
 
     print("\n" + json.dumps(summary, indent=2))
@@ -195,6 +217,7 @@ def main() -> None:
     out_file = RESULTS_DIR / f"answers_{args.label}.json"
     out_file.write_text(json.dumps({
         "label": args.label,
+        "mode": args.mode,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "answer_model": MODEL,
         "judge_model": JUDGE_MODEL,

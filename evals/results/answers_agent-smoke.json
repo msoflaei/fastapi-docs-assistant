@@ -1,0 +1,134 @@
+{
+  "label": "agent-smoke",
+  "mode": "agent",
+  "timestamp": "2026-11-06T10:02:14",
+  "answer_model": "claude-haiku-5-5",
+  "judge_model": "claude-sonnet-5-5",
+  "k": 8,
+  "summary": {
+    "in_scope": {
+      "n": 3,
+      "point_coverage": 1.0,
+      "fully_correct": 1,
+      "faithful": 0.667,
+      "partially_faithful": 1,
+      "unfaithful": 0,
+      "false_refusals": 0,
+      "answers_without_citations": 0,
+      "answers_with_invalid_citations": 0
+    },
+    "avg_answer_seconds": 4.27,
+    "avg_input_tokens": 4626,
+    "avg_output_tokens": 341,
+    "avg_tool_calls": 1,
+    "stopped_at_limit": 0,
+    "judge_errors": 0
+  },
+  "per_question": [
+    {
+      "id": "q01",
+      "category": "in_scope",
+      "question": "How do I start my app locally so it reloads when I change the code?",
+      "answer": "Run your app with the `fastapi dev` command:\n\n```console\n$ fastapi dev\n```\n\nAuto-reload is enabled by default, so the server restarts when you change your code [1]. The command reads your `main.py` file, detects the FastAPI app in it, and starts a Uvicorn server [2]. It listens on `127.0.0.1` (localhost) by default [1].\n\nUse `fastapi run` for production instead. It has auto-reload disabled and listens on `0.0.0.0` [3].",
+      "sources": [
+        "https://fastapi.tiangolo.com/fastapi-cli/#fastapi-dev",
+        "https://fastapi.tiangolo.com/#run-it",
+        "https://fastapi.tiangolo.com/fastapi-cli/#fastapi-run",
+        "https://fastapi.tiangolo.com/deployment/manually/#use-the-fastapi-run-command",
+        "https://fastapi.tiangolo.com/fastapi-cli/"
+      ],
+      "answer_points": [
+        "use the fastapi dev command",
+        "auto-reload is enabled in development mode"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "yes",
+      "judge_explanation": "The answer recommends `fastapi dev` and states auto-reload is on by default; all claims (127.0.0.1, main.py detection, Uvicorn, `fastapi run` with no reload and 0.0.0.0) are supported by the documents.",
+      "refused": false,
+      "cited": [
+        1,
+        2,
+        3
+      ],
+      "invalid_citations": [],
+      "tool_calls": 1,
+      "stopped": false,
+      "input_tokens": 4405,
+      "output_tokens": 286,
+      "seconds": 5.14
+    },
+    {
+      "id": "q02",
+      "category": "in_scope",
+      "question": "How can I make a query parameter optional?",
+      "answer": "To make a query parameter optional, give it a default value of `None`. The docs show this with a type hint and a plain default:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: str, q: str | None = None):\n    if q:\n        return {\"item_id\": item_id, \"q\": q}\n    return {\"item_id\": item_id}\n```\n\nThe function parameter `q` is then optional and defaults to `None` [4].\n\nUsing `str | None` alone does not make it optional. Without a default value, the parameter is still required [1]. You must set the default to `None`.\n\nWith `Annotated`, which the docs recommend for new code, the default goes after the annotation:\n\n```python\nq: Annotated[str | None, Query(min_length=3)] = None\n```\n\n[1][5]\n\nParameters without a default are required, and parameters with a default are optional [2].",
+      "sources": [
+        "https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#required-parameters-and-none",
+        "https://fastapi.tiangolo.com/tutorial/query-params/#required-query-parameters",
+        "https://fastapi.tiangolo.com/tutorial/query-param-models/#optional-query-parameter-models",
+        "https://fastapi.tiangolo.com/tutorial/query-params/#defaults",
+        "https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#alternative-old-query-as-the-default-value"
+      ],
+      "answer_points": [
+        "give it a default value of None",
+        "for example: str | None = None"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "yes",
+      "judge_explanation": "The answer states that a default of `None` makes a query parameter optional and shows `q: str | None = None`. All claims are supported by the documents, including the `Annotated` form and the note that Annotated is recommended for new code.",
+      "refused": false,
+      "cited": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "invalid_citations": [],
+      "tool_calls": 1,
+      "stopped": false,
+      "input_tokens": 5024,
+      "output_tokens": 378,
+      "seconds": 4.79
+    },
+    {
+      "id": "q03",
+      "category": "in_scope",
+      "question": "How do I read a value from the URL path, like an item ID?",
+      "answer": "You declare a path parameter by putting its name in braces in the route path, then adding a function argument with the same name. FastAPI passes the URL value to that argument [1]:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id):\n    return {\"item_id\": item_id}\n```\n\nVisiting `/items/foo` returns `{\"item_id\":\"foo\"}` [1].\n\nTo have FastAPI convert and validate the value, add a Python type annotation. This example declares `item_id` as an `int` [1]:\n\n```python\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    return {\"item_id\": item_id}\n```\n\nA path parameter is always required because it is part of the URL path. Adding `None` to its type does not make it optional [2].",
+      "sources": [
+        "https://fastapi.tiangolo.com/tutorial/path-params/",
+        "https://fastapi.tiangolo.com/tutorial/path-params-numeric-validations/#declare-metadata",
+        "https://fastapi.tiangolo.com/tutorial/path-params-numeric-validations/#order-the-parameters-as-you-need-tricks",
+        "https://fastapi.tiangolo.com/tutorial/path-params-numeric-validations/#order-the-parameters-as-you-need",
+        "https://fastapi.tiangolo.com/tutorial/query-params/"
+      ],
+      "answer_points": [
+        "declare it in the path with curly braces, e.g. /items/{item_id}",
+        "add a function parameter with the same name"
+      ],
+      "points_covered": [
+        true,
+        true
+      ],
+      "faithfulness": "partial",
+      "judge_explanation": "The answer conveys both key points. Most claims are supported by the documents, but the statement that a type annotation makes FastAPI 'convert and validate the value' is not stated for path parameters in the path-params document. The document only mentions editor support there, and conversion and validation appear in the query-params document.",
+      "refused": false,
+      "cited": [
+        1,
+        2
+      ],
+      "invalid_citations": [],
+      "tool_calls": 1,
+      "stopped": false,
+      "input_tokens": 4448,
+      "output_tokens": 358,
+      "seconds": 2.88
+    }
+  ]
+}

@@ -55,3 +55,49 @@ def test_llm_failure_returns_502(client, monkeypatch):
         )
     monkeypatch.setattr(api, "generate_answer", failing_generate)
     assert client.post("/ask", json=QUESTION).status_code == 502
+
+
+class FakeAgent:
+    """Stands in for DocsAgent: returns a fixed result without calling Claude."""
+
+    def __init__(self, embed_model, client, conn):
+        pass
+
+    def run(self, question):
+        return {
+            "answer": "Use dependencies with Depends() [1].",
+            "sources": [{"index": 1, "section": "Dependencies",
+                         "url": "https://fastapi.tiangolo.com/tutorial/dependencies/"}],
+            "documents": [],
+            "steps": [{"tool": "search_docs", "input": {"query": "dependencies"}}],
+            "usage": {"input_tokens": 100, "output_tokens": 20},
+            "stopped": False,
+        }
+
+
+class FailingAgent(FakeAgent):
+    def run(self, question):
+        raise anthropic.APIConnectionError(
+            request=httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+        )
+
+
+def test_agent_returns_answer_with_trace_and_usage(client, monkeypatch):
+    monkeypatch.setattr(api, "DocsAgent", FakeAgent)
+    response = client.post("/agent", json={"question": "How do I share logic?"})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["answer"] == "Use dependencies with Depends() [1]."
+    assert body["steps"] == [{"tool": "search_docs", "input": {"query": "dependencies"}}]
+    assert body["sources"][0]["index"] == 1
+    assert body["usage"]["input_tokens"] == 100
+    assert body["stopped"] is False
+
+
+def test_agent_llm_failure_returns_502(client, monkeypatch):
+    monkeypatch.setattr(api, "DocsAgent", FailingAgent)
+    assert client.post("/agent", json={"question": "How do I share logic?"}).status_code == 502
+
+
+def test_agent_too_short_question_is_rejected(client):
+    assert client.post("/agent", json={"question": "a"}).status_code == 422

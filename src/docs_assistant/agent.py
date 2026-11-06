@@ -75,13 +75,15 @@ class DocsAgent:
         self.conn = conn
         self.search_k = search_k
         self.sources: list[dict] = []      # every document shown to Claude, numbered from 1
+        self.documents: list[dict] = []    # the content behind each source, same numbering (for evaluation)
         self._source_ids: dict[str, int] = {}
 
     # ---- Source numbering: the same chunk or page always keeps the same number ----
 
-    def add_source(self, key: str, section: str, url: str) -> int:
+    def add_source(self, key: str, section: str, url: str, content: str) -> int:
         if key not in self._source_ids:
             self.sources.append({"index": len(self.sources) + 1, "section": section, "url": url})
+            self.documents.append({"url": url, "content": content})
             self._source_ids[key] = len(self.sources)
         return self._source_ids[key]
 
@@ -92,7 +94,7 @@ class DocsAgent:
         parts = []
         for c in chunks:
             doc_id = c["chunk_id"].split("#")[0]
-            n = self.add_source(c["chunk_id"], c["section"], c["url"])
+            n = self.add_source(c["chunk_id"], c["section"], c["url"], c["content"])
             parts.append(f'<document index="{n}" doc_id="{doc_id}" source="{c["url"]}">\n{c["content"]}\n</document>')
         return "\n\n".join(parts) or "No results."
 
@@ -105,7 +107,7 @@ class DocsAgent:
         text = "\n\n".join(r[2] for r in rows)
         if len(text) > MAX_PAGE_CHARS:
             text = text[:MAX_PAGE_CHARS] + "\n\n[Page truncated]"
-        n = self.add_source(f"page:{doc_id}", f"{doc_id} (full page)", page_url)
+        n = self.add_source(f"page:{doc_id}", f"{doc_id} (full page)", page_url, text)
         return f'<document index="{n}" doc_id="{doc_id}" source="{page_url}">\n{text}\n</document>'
 
     def run_tool(self, name: str, args: dict) -> str:
@@ -123,7 +125,7 @@ class DocsAgent:
     # ---- The agent loop ----
 
     def run(self, question: str) -> dict:
-        self.sources, self._source_ids = [], {}
+        self.sources, self.documents, self._source_ids = [], [], {}
         messages = [{"role": "user", "content": question}]
         steps = []                                           # the trace: every tool call made
         usage = {"input_tokens": 0, "output_tokens": 0}     # to measure cost
@@ -143,6 +145,7 @@ class DocsAgent:
 
             if response.stop_reason != "tool_use":          # no tool requested: this is the final answer
                 return {"answer": response_text(response), "sources": self.sources,
+                        "documents": self.documents,
                         "steps": steps, "usage": usage, "stopped": False}
 
             # Run every tool Claude asked for, and send all results back in one message.
@@ -155,8 +158,10 @@ class DocsAgent:
             messages.append({"role": "user", "content": results})
 
         # Guardrail: the step limit was reached without a final answer.
+                # Guardrail: the step limit was reached without a final answer.
         return {"answer": "I couldn't complete this question within the step limit.",
-                "sources": self.sources, "steps": steps, "usage": usage, "stopped": True}
+                "sources": self.sources, "documents": self.documents,
+                "steps": steps, "usage": usage, "stopped": True}
 
 
 def main() -> None:
