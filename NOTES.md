@@ -162,3 +162,12 @@ Experiments:
 - Trace (every tool call) and token usage recorded per question, for evaluation.
 - Source numbers stay stable across multiple searches, so citations remain valid.
 - System prompt kept general: no hints targeting specific eval questions (avoids overfitting).
+- First manual test (4 questions): q04 fixed (agent added "body" to its query, then read the
+  Request Body page); q10 mostly fixed (found Dependencies, but led with query models);
+  q23 answered in 1 search; MongoDB: correct conclusion after 3 searches (20.6k input tokens).
+- Problems found: (1) cited doc_ids like [tutorial/body] instead of numbers, because tool output
+  shows both index and doc_id; (2) out-of-scope answer reworded the refusal and added advice
+  from outside knowledge. Fixed by making the citation and refusal rules explicit in the prompt.
+- After the prompt fix: all 4 answers cited numbers; MongoDB answer gave the exact refusal plus
+  one cited sentence, in 2 searches (13.8k tokens, down from 20.6k). q10 now shows a dependency
+  class with Depends(). The agent's path varies between runs (q04: search + read_page, then 2 searches).

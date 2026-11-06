@@ -61,11 +61,10 @@ How to work:
 - Be efficient: usually 1 to 3 tool calls are enough. Stop once you have what you need.
 
 How to answer:
-- Answer using ONLY information from the tool results.
-- Cite the document numbers from the tool results in square brackets, like [1] or [2][3], right after the sentence they support.
-- If the documentation doesn't contain the answer after a reasonable search, say "I couldn't find this in the FastAPI documentation." and stop.
+- Answer using ONLY information from the tool results. Never add suggestions or facts from your own knowledge.
+- Cite sources by their index number, the index="..." attribute of each document, in square brackets like [4] or [2][5], right after the sentence they support. Never cite doc_ids or URLs.
+- If the documentation doesn't contain the answer after a reasonable search, reply with exactly this sentence: "I couldn't find this in the FastAPI documentation." You may add one sentence naming a related topic the docs do cover, with its citation. Do not offer workarounds or advice beyond that.
 - Include short code examples from the documents when they help. Be concise and practical."""
-
 
 class DocsAgent:
     """Holds the shared resources and runs the agent loop for one question at a time."""
