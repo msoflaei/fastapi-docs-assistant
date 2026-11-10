@@ -16,12 +16,14 @@
 - No overlap between chunks: since splits follow section boundaries, overlap adds little.
 - First version: 2017 chunks, median 72 words, 427 under 30 words (21%).
   Fix: merge sections under 100 words into the following section (staying under 350).
-- 40 chunks exceed 350 words (max 1470) because of long code examples; kept whole,
-  since splitting code hurts more and the embedding model's limit is much higher.
+- - 40 chunks exceed 350 words (max 1470) because of long code examples; kept whole,
+  since splitting code hurts more. Measured later: 234 of 1059 chunks exceed the
+  embedding model's 512-token limit, so their endings are truncated for search
+  (code uses more tokens per word than the 1.3 estimate assumed).
 
 ## Embeddings
 - Model: BAAI/bge-small-en-v1.5 (open-source, 384 dimensions, 512-token limit), run locally.
-- Chunks longer than the token limit: [your number] of 1059 (truncated; mostly long code examples).
+- Chunks longer than the token limit: 234 of 1059 (22%; truncated, mostly long code examples).
 - Vectors normalized, so cosine similarity = dot product.
 - Queries use the bge retrieval prefix; documents don't.
 
@@ -148,7 +150,7 @@ Experiments:
 - GitHub Actions (.github/workflows/tests.yml): unit and API tests on every push and pull request.
 - CPU-only PyTorch on CI to avoid multi-GB GPU builds; versions constrained by requirements-lock.txt.
 - No secrets or database needed: the LLM, model, and database are mocked in these tests.
-- FastAPI docs pinned to commit [first 7 characters of your commit ID] in download_data.sh;
+- FastAPI docs pinned to commit 5cb6272 in download_data.sh;
   full rebuild reproduced identical results (156 docs, 1059 chunks, hit@5 0.950).
 - retrieval-eval workflow: rebuilds the index from scratch on CI with a pgvector service
   container, runs integration tests, then the retrieval eval with a quality gate (hit@5 >= 0.90).

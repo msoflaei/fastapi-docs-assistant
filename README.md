@@ -74,7 +74,7 @@ The agent fixed every question plain RAG failed: vocabulary mismatches (users sa
 
 ### Framework comparison: LlamaIndex
 
-The retrieval pipeline rebuilt with LlamaIndex (same documents, embedding model, and database) in about 45 lines instead of 338. Its Markdown splitter matched hit@5 (0.950) and ranked better (MRR 0.896 vs 0.834), while its default chunk size silently exceeded the embedding model's 512-token limit. Details in [NOTES.md](NOTES.md).
+The retrieval pipeline rebuilt with LlamaIndex (same documents, embedding model, and database) in about 45 lines instead of 338. Its Markdown splitter matched hit@5 (0.950) and ranked better (MRR 0.896 vs 0.834), while its default chunk size (1,024 tokens) exceeded the embedding model's 512-token limit for most chunks (my own chunking exceeds it for 22%, mostly long code examples). Details in [NOTES.md](NOTES.md).
 
 ## Key decisions and lessons
 
@@ -161,6 +161,7 @@ NOTES.md                                     # detailed lab notebook of every de
 
 - The evaluation set has 40 in-scope questions, so a difference of one question is 2.5 points; the agent now scores 100%, so harder, multi-part questions are needed.
 - The LLM judge agreed with my manual review on 8 of 10 answers; refining its rubric would make judge-based metrics more reliable.
+- 234 of 1,059 chunks (22%) exceed the embedding model's 512-token limit, mostly long code examples, so their endings are invisible to search (the LLM still receives the full text). Chunking by token count instead of word count, or a longer-context embedding model, would fix this.
 - Plain RAG's token usage was estimated rather than measured.
 - Promising leads not yet adopted, since they need answer evaluation: LlamaIndex-style chunking and a larger reranker.
 
