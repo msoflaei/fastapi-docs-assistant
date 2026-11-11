@@ -1,0 +1,1149 @@
+{
+  "label": "exclude-llm-test",
+  "timestamp": "2026-11-11T15:10:06",
+  "excluded_docs": [
+    "release-notes",
+    "reference/%",
+    "\\_llm-test"
+  ],
+  "n_questions": 40,
+  "summary": {
+    "hit@1": 0.75,
+    "hit@3": 0.925,
+    "hit@5": 0.95,
+    "hit@10": 0.95,
+    "recall@1": 0.7,
+    "recall@3": 0.887,
+    "recall@5": 0.912,
+    "recall@10": 0.925,
+    "mrr": 0.834
+  },
+  "per_question": [
+    {
+      "id": "q01",
+      "question": "How do I start my app locally so it reloads when I change the code?",
+      "relevant_docs": [
+        "fastapi-cli",
+        "tutorial/first-steps"
+      ],
+      "retrieved_docs": [
+        "fastapi-cli",
+        "deployment/manually",
+        "deployment/concepts",
+        "deployment/concepts",
+        "deployment/concepts",
+        "advanced/events",
+        "fastapi-cli",
+        "fastapi-cli",
+        "tutorial/debugging",
+        "tutorial/first-steps"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 0.5,
+      "hit@3": 1.0,
+      "recall@3": 0.5,
+      "hit@5": 1.0,
+      "recall@5": 0.5,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q02",
+      "question": "How can I make a query parameter optional?",
+      "relevant_docs": [
+        "tutorial/query-params",
+        "tutorial/query-params-str-validations"
+      ],
+      "retrieved_docs": [
+        "tutorial/query-params",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-param-models",
+        "tutorial/query-params",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-param-models",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 0.5,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q03",
+      "question": "How do I read a value from the URL path, like an item ID?",
+      "relevant_docs": [
+        "tutorial/path-params"
+      ],
+      "retrieved_docs": [
+        "tutorial/path-params",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/body",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/body",
+        "index",
+        "tutorial/path-params",
+        "tutorial/path-params-numeric-validations"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q04",
+      "question": "How do I accept JSON data in a POST request?",
+      "relevant_docs": [
+        "tutorial/body"
+      ],
+      "retrieved_docs": [
+        "tutorial/path-params",
+        "index",
+        "tutorial/schema-extra-example",
+        "tutorial/request-files",
+        "index",
+        "advanced/custom-response",
+        "advanced/additional-responses",
+        "advanced/using-request-directly",
+        "tutorial/request-forms",
+        "advanced/response-directly"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 0.0,
+      "recall@3": 0.0,
+      "hit@5": 0.0,
+      "recall@5": 0.0,
+      "hit@10": 0.0,
+      "recall@10": 0.0,
+      "mrr": 0.0
+    },
+    {
+      "id": "q05",
+      "question": "How can I stop my endpoint from returning fields like a password in the response?",
+      "relevant_docs": [
+        "tutorial/response-model",
+        "tutorial/extra-models"
+      ],
+      "retrieved_docs": [
+        "tutorial/request-form-models",
+        "tutorial/response-model",
+        "tutorial/response-model",
+        "tutorial/security/simple-oauth2",
+        "tutorial/response-model",
+        "tutorial/response-model",
+        "advanced/security/http-basic-auth",
+        "tutorial/security/first-steps",
+        "tutorial/handling-errors",
+        "tutorial/query-param-models"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 0.5,
+      "hit@5": 1.0,
+      "recall@5": 0.5,
+      "hit@10": 1.0,
+      "recall@10": 0.5,
+      "mrr": 0.5
+    },
+    {
+      "id": "q06",
+      "question": "How do I return a 404 error when an item doesn't exist?",
+      "relevant_docs": [
+        "tutorial/handling-errors"
+      ],
+      "retrieved_docs": [
+        "tutorial/frontend",
+        "tutorial/handling-errors",
+        "tutorial/handling-errors",
+        "tutorial/handling-errors",
+        "index",
+        "tutorial/frontend",
+        "tutorial/handling-errors",
+        "tutorial/handling-errors",
+        "tutorial/query-params-str-validations",
+        "advanced/additional-status-codes"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.5
+    },
+    {
+      "id": "q07",
+      "question": "My frontend on another domain can't call my API because of CORS errors. How do I fix it?",
+      "relevant_docs": [
+        "tutorial/cors"
+      ],
+      "retrieved_docs": [
+        "tutorial/cors",
+        "tutorial/cors",
+        "tutorial/cors",
+        "tutorial/frontend",
+        "tutorial/frontend",
+        "tutorial/cors",
+        "tutorial/handling-errors",
+        "advanced/strict-content-type",
+        "tutorial/frontend",
+        "tutorial/frontend"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q08",
+      "question": "How can I run some code for every request, for example to measure how long it takes?",
+      "relevant_docs": [
+        "tutorial/middleware"
+      ],
+      "retrieved_docs": [
+        "tutorial/middleware",
+        "advanced/events",
+        "deployment/concepts",
+        "how-to/custom-request-and-route",
+        "advanced/testing-events",
+        "advanced/async-tests",
+        "advanced/events",
+        "how-to/custom-request-and-route",
+        "tutorial/testing",
+        "advanced/events"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q09",
+      "question": "How do I send an email after returning a response, without making the user wait?",
+      "relevant_docs": [
+        "tutorial/background-tasks"
+      ],
+      "retrieved_docs": [
+        "tutorial/background-tasks",
+        "tutorial/middleware",
+        "advanced/custom-response",
+        "tutorial/server-sent-events",
+        "tutorial/response-model",
+        "advanced/response-directly",
+        "tutorial/response-model",
+        "advanced/stream-data",
+        "advanced/response-cookies",
+        "advanced/stream-data"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q10",
+      "question": "How can I share common logic, like pagination parameters, across several endpoints?",
+      "relevant_docs": [
+        "tutorial/dependencies/index"
+      ],
+      "retrieved_docs": [
+        "tutorial/query-param-models",
+        "tutorial/query-param-models",
+        "tutorial/query-params",
+        "tutorial/cookie-param-models",
+        "tutorial/query-params-str-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/query-param-models",
+        "tutorial/header-param-models",
+        "tutorial/cookie-param-models",
+        "tutorial/path-params"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 0.0,
+      "recall@3": 0.0,
+      "hit@5": 0.0,
+      "recall@5": 0.0,
+      "hit@10": 0.0,
+      "recall@10": 0.0,
+      "mrr": 0.0
+    },
+    {
+      "id": "q11",
+      "question": "How do I open a database session for a request and make sure it gets closed afterwards?",
+      "relevant_docs": [
+        "tutorial/dependencies/dependencies-with-yield",
+        "tutorial/sql-databases"
+      ],
+      "retrieved_docs": [
+        "advanced/advanced-dependencies",
+        "advanced/advanced-dependencies",
+        "tutorial/sql-databases",
+        "advanced/events",
+        "advanced/events",
+        "how-to/custom-request-and-route",
+        "advanced/settings",
+        "tutorial/handling-errors",
+        "advanced/using-request-directly",
+        "tutorial/security/oauth2-jwt"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 0.5,
+      "hit@5": 1.0,
+      "recall@5": 0.5,
+      "hit@10": 1.0,
+      "recall@10": 0.5,
+      "mrr": 0.3333333333333333
+    },
+    {
+      "id": "q12",
+      "question": "How do I require a bearer token to access my endpoints?",
+      "relevant_docs": [
+        "tutorial/security/first-steps",
+        "tutorial/security/simple-oauth2"
+      ],
+      "retrieved_docs": [
+        "tutorial/security/first-steps",
+        "tutorial/security/simple-oauth2",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/simple-oauth2",
+        "tutorial/security/first-steps",
+        "tutorial/security/simple-oauth2",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 0.5,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q13",
+      "question": "How do I implement login with JWT tokens?",
+      "relevant_docs": [
+        "tutorial/security/oauth2-jwt"
+      ],
+      "retrieved_docs": [
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "advanced/security/oauth2-scopes",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt",
+        "tutorial/security/oauth2-jwt"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q14",
+      "question": "How do I connect FastAPI to a SQL database?",
+      "relevant_docs": [
+        "tutorial/sql-databases"
+      ],
+      "retrieved_docs": [
+        "tutorial/sql-databases",
+        "fastapi-cli",
+        "tutorial/sql-databases",
+        "tutorial/first-steps",
+        "tutorial/sql-databases",
+        "tutorial/index",
+        "tutorial/first-steps",
+        "index",
+        "tutorial/sql-databases",
+        "tutorial/sql-databases"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q15",
+      "question": "How do I serve images and CSS files from a folder?",
+      "relevant_docs": [
+        "tutorial/static-files"
+      ],
+      "retrieved_docs": [
+        "how-to/custom-docs-ui-assets",
+        "advanced/templates",
+        "tutorial/static-files",
+        "tutorial/frontend",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "tutorial/frontend",
+        "tutorial/request-files",
+        "tutorial/request-forms-and-files",
+        "how-to/custom-docs-ui-assets"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.3333333333333333
+    },
+    {
+      "id": "q16",
+      "question": "How do I write tests for my API?",
+      "relevant_docs": [
+        "tutorial/testing"
+      ],
+      "retrieved_docs": [
+        "tutorial/testing",
+        "advanced/openapi-callbacks",
+        "tutorial/testing",
+        "tutorial/testing",
+        "advanced/async-tests",
+        "tutorial/testing",
+        "advanced/async-tests",
+        "tutorial/testing",
+        "advanced/testing-websockets",
+        "advanced/testing-events"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q17",
+      "question": "How do I let users upload a file?",
+      "relevant_docs": [
+        "tutorial/request-files"
+      ],
+      "retrieved_docs": [
+        "tutorial/request-files",
+        "tutorial/request-files",
+        "tutorial/request-files",
+        "tutorial/request-forms-and-files",
+        "tutorial/request-files",
+        "tutorial/request-files",
+        "tutorial/request-files",
+        "advanced/settings",
+        "advanced/settings",
+        "tutorial/security/first-steps"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q18",
+      "question": "How do I receive data from an HTML form instead of JSON?",
+      "relevant_docs": [
+        "tutorial/request-forms"
+      ],
+      "retrieved_docs": [
+        "tutorial/request-forms",
+        "tutorial/request-files",
+        "tutorial/request-forms",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/json-base64-bytes",
+        "advanced/custom-response",
+        "tutorial/request-forms-and-files"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q19",
+      "question": "My main.py is getting too big. How do I split my app into multiple files?",
+      "relevant_docs": [
+        "tutorial/bigger-applications"
+      ],
+      "retrieved_docs": [
+        "tutorial/bigger-applications",
+        "tutorial/bigger-applications",
+        "tutorial/bigger-applications",
+        "advanced/settings",
+        "tutorial/testing",
+        "tutorial/bigger-applications",
+        "tutorial/request-files",
+        "tutorial/bigger-applications",
+        "tutorial/bigger-applications",
+        "tutorial/request-files"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q20",
+      "question": "How do I read a custom header such as User-Agent?",
+      "relevant_docs": [
+        "tutorial/header-params"
+      ],
+      "retrieved_docs": [
+        "tutorial/header-params",
+        "tutorial/header-params",
+        "tutorial/header-param-models",
+        "tutorial/handling-errors",
+        "advanced/strict-content-type",
+        "tutorial/bigger-applications",
+        "tutorial/header-param-models",
+        "how-to/custom-docs-ui-assets",
+        "advanced/response-headers",
+        "advanced/strict-content-type"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q21",
+      "question": "How do I read a cookie sent by the browser?",
+      "relevant_docs": [
+        "tutorial/cookie-params"
+      ],
+      "retrieved_docs": [
+        "tutorial/cookie-param-models",
+        "tutorial/cookie-params",
+        "advanced/response-cookies",
+        "advanced/response-cookies",
+        "tutorial/cookie-param-models",
+        "advanced/websockets",
+        "advanced/using-request-directly",
+        "tutorial/server-sent-events",
+        "advanced/security/oauth2-scopes",
+        "tutorial/header-params"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.5
+    },
+    {
+      "id": "q22",
+      "question": "How can I make sure a path parameter is a number between 1 and 1000?",
+      "relevant_docs": [
+        "tutorial/path-params-numeric-validations"
+      ],
+      "retrieved_docs": [
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params",
+        "tutorial/path-params",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params-numeric-validations",
+        "tutorial/path-params"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q23",
+      "question": "How do I make an endpoint return status code 201 when something is created?",
+      "relevant_docs": [
+        "tutorial/response-status-code"
+      ],
+      "retrieved_docs": [
+        "advanced/additional-status-codes",
+        "tutorial/response-status-code",
+        "tutorial/response-status-code",
+        "advanced/response-change-status-code",
+        "tutorial/response-status-code",
+        "tutorial/handling-errors",
+        "tutorial/path-operation-configuration",
+        "tutorial/handling-errors",
+        "advanced/generate-clients",
+        "how-to/authentication-error-status-code"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.5
+    },
+    {
+      "id": "q24",
+      "question": "How can I change the title and description shown in the automatic API docs?",
+      "relevant_docs": [
+        "tutorial/metadata"
+      ],
+      "retrieved_docs": [
+        "tutorial/metadata",
+        "tutorial/schema-extra-example",
+        "how-to/general",
+        "tutorial/schema-extra-example",
+        "tutorial/metadata",
+        "tutorial/schema-extra-example",
+        "tutorial/metadata",
+        "how-to/configure-swagger-ui",
+        "tutorial/schema-extra-example",
+        "tutorial/schema-extra-example"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q25",
+      "question": "How do I add real-time two-way communication to my app?",
+      "relevant_docs": [
+        "advanced/websockets"
+      ],
+      "retrieved_docs": [
+        "advanced/websockets",
+        "help-fastapi",
+        "advanced/openapi-callbacks",
+        "tutorial/first-steps",
+        "tutorial/middleware",
+        "advanced/websockets",
+        "advanced/openapi-callbacks",
+        "how-to/custom-request-and-route",
+        "advanced/openapi-callbacks",
+        "tutorial/first-steps"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q26",
+      "question": "How do I load a machine learning model once when the app starts?",
+      "relevant_docs": [
+        "advanced/events"
+      ],
+      "retrieved_docs": [
+        "advanced/events",
+        "advanced/events",
+        "advanced/dataclasses",
+        "tutorial/body",
+        "tutorial/sql-databases",
+        "advanced/testing-events",
+        "tutorial/sql-databases",
+        "tutorial/dependencies/classes-as-dependencies",
+        "tutorial/sql-databases",
+        "advanced/generate-clients"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q27",
+      "question": "How should I manage configuration like secret keys and environment variables?",
+      "relevant_docs": [
+        "advanced/settings"
+      ],
+      "retrieved_docs": [
+        "advanced/settings",
+        "advanced/settings",
+        "environment-variables",
+        "advanced/settings",
+        "how-to/conditional-openapi",
+        "advanced/settings",
+        "advanced/settings",
+        "advanced/settings",
+        "advanced/settings",
+        "advanced/settings"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q28",
+      "question": "How do I return an HTML page instead of JSON?",
+      "relevant_docs": [
+        "advanced/custom-response"
+      ],
+      "retrieved_docs": [
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/response-directly",
+        "tutorial/frontend",
+        "advanced/custom-response",
+        "advanced/custom-response",
+        "advanced/response-directly"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q29",
+      "question": "How can I set a cookie in my response?",
+      "relevant_docs": [
+        "advanced/response-cookies"
+      ],
+      "retrieved_docs": [
+        "advanced/response-cookies",
+        "advanced/response-cookies",
+        "advanced/response-headers",
+        "tutorial/cookie-params",
+        "tutorial/cookie-param-models",
+        "tutorial/cookie-param-models",
+        "advanced/response-change-status-code",
+        "advanced/custom-response",
+        "advanced/response-headers",
+        "tutorial/response-model"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q30",
+      "question": "How do I test async functions, like a database call, in my tests?",
+      "relevant_docs": [
+        "advanced/async-tests"
+      ],
+      "retrieved_docs": [
+        "advanced/async-tests",
+        "advanced/async-tests",
+        "advanced/async-tests",
+        "tutorial/dependencies/index",
+        "async",
+        "async",
+        "how-to/testing-database",
+        "async",
+        "tutorial/testing",
+        "async"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q31",
+      "question": "My app runs behind a proxy under a path prefix like /api/v1. How do I configure that?",
+      "relevant_docs": [
+        "advanced/behind-a-proxy"
+      ],
+      "retrieved_docs": [
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/behind-a-proxy",
+        "advanced/sub-applications",
+        "advanced/behind-a-proxy"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q32",
+      "question": "How do I render HTML with Jinja templates?",
+      "relevant_docs": [
+        "advanced/templates"
+      ],
+      "retrieved_docs": [
+        "advanced/templates",
+        "advanced/templates",
+        "advanced/templates",
+        "advanced/templates",
+        "how-to/custom-docs-ui-assets",
+        "project-generation",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "alternatives"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q33",
+      "question": "How do I package my app in a Docker container?",
+      "relevant_docs": [
+        "deployment/docker"
+      ],
+      "retrieved_docs": [
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker",
+        "deployment/docker"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q34",
+      "question": "Should I define my endpoints with async def or normal def?",
+      "relevant_docs": [
+        "async"
+      ],
+      "retrieved_docs": [
+        "tutorial/dependencies/index",
+        "async",
+        "async",
+        "async",
+        "async",
+        "advanced/async-tests",
+        "async",
+        "tutorial/first-steps",
+        "async",
+        "advanced/events"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.5
+    },
+    {
+      "id": "q35",
+      "question": "How do I use multiple processes to use all CPU cores in production?",
+      "relevant_docs": [
+        "deployment/server-workers"
+      ],
+      "retrieved_docs": [
+        "deployment/concepts",
+        "deployment/concepts",
+        "deployment/concepts",
+        "tutorial/background-tasks",
+        "deployment/server-workers",
+        "deployment/docker",
+        "deployment/concepts",
+        "deployment/docker",
+        "deployment/concepts",
+        "deployment/docker"
+      ],
+      "hit@1": 0.0,
+      "recall@1": 0.0,
+      "hit@3": 0.0,
+      "recall@3": 0.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.2
+    },
+    {
+      "id": "q36",
+      "question": "How can I change settings of the Swagger UI docs page, like turning off syntax highlighting?",
+      "relevant_docs": [
+        "how-to/configure-swagger-ui"
+      ],
+      "retrieved_docs": [
+        "how-to/configure-swagger-ui",
+        "how-to/configure-swagger-ui",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "how-to/custom-docs-ui-assets",
+        "tutorial/metadata"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q37",
+      "question": "How do I accept a JSON body that contains a list of nested objects?",
+      "relevant_docs": [
+        "tutorial/body-nested-models"
+      ],
+      "retrieved_docs": [
+        "tutorial/body-nested-models",
+        "tutorial/body-nested-models",
+        "alternatives",
+        "tutorial/body-nested-models",
+        "tutorial/body-nested-models",
+        "tutorial/body-nested-models",
+        "tutorial/schema-extra-example",
+        "tutorial/body-nested-models",
+        "tutorial/schema-extra-example",
+        "advanced/dataclasses"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q38",
+      "question": "How can I limit a query string parameter to at most 50 characters?",
+      "relevant_docs": [
+        "tutorial/query-params-str-validations"
+      ],
+      "retrieved_docs": [
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-param-models",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params-str-validations",
+        "tutorial/query-params",
+        "tutorial/query-params"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q39",
+      "question": "How can an endpoint return different status codes depending on what happened?",
+      "relevant_docs": [
+        "advanced/additional-status-codes"
+      ],
+      "retrieved_docs": [
+        "advanced/additional-status-codes",
+        "advanced/additional-status-codes",
+        "advanced/response-change-status-code",
+        "tutorial/response-status-code",
+        "tutorial/handling-errors",
+        "tutorial/response-status-code",
+        "tutorial/handling-errors",
+        "tutorial/path-operation-configuration",
+        "advanced/additional-responses",
+        "advanced/additional-responses"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 1.0,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    },
+    {
+      "id": "q40",
+      "question": "How do I add tags to group my endpoints in the docs?",
+      "relevant_docs": [
+        "tutorial/path-operation-configuration",
+        "tutorial/metadata"
+      ],
+      "retrieved_docs": [
+        "tutorial/path-operation-configuration",
+        "tutorial/metadata",
+        "tutorial/metadata",
+        "tutorial/metadata",
+        "tutorial/bigger-applications",
+        "advanced/generate-clients",
+        "tutorial/metadata",
+        "how-to/general",
+        "how-to/custom-docs-ui-assets",
+        "advanced/generate-clients"
+      ],
+      "hit@1": 1.0,
+      "recall@1": 0.5,
+      "hit@3": 1.0,
+      "recall@3": 1.0,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0
+    }
+  ]
+}
