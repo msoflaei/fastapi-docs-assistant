@@ -8,7 +8,7 @@ from docs_assistant.search import QUERY_PREFIX
 
 # Pages excluded from search by default, chosen by retrieval evaluation (see NOTES.md):
 # release notes mention many features briefly; reference pages are thin pointers in our data.
-DEFAULT_EXCLUDE = ("release-notes", "reference/%")
+DEFAULT_EXCLUDE = ("release-notes", "reference/%", r"\_llm-test")
 
 # Number of chunks given to the LLM, chosen by answer evaluation (see NOTES.md):
 # k=8 beat k=5 on correctness in all 3 repeated runs (+2.5 points on average).

@@ -4,11 +4,13 @@ from pathlib import Path                            # file paths
 
 import numpy as np                                  # fast arrays of numbers; our vectors live in one
 from sentence_transformers import SentenceTransformer   # loads and runs embedding models
+import os
 
 CHUNKS_FILE = Path("data/processed/chunks.jsonl")   # output of the chunking step
 EMB_FILE = Path("data/processed/embeddings.npy")    # where the vectors will be saved
-MODEL_NAME = "BAAI/bge-small-en-v1.5"               # open-source embedding model on Hugging Face
-
+# MODEL_NAME = "BAAI/bge-small-en-v1.5"               # open-source embedding model on Hugging Face
+# The embedding model: a Hugging Face model name or a local folder (e.g. a fine-tuned model).
+MODEL_NAME = os.environ.get("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
 
 def load_chunks() -> list[dict]:
     """Read all chunks from the JSONL file, in order."""

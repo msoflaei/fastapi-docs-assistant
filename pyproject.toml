@@ -26,6 +26,7 @@ frameworks = [
     "llama-index-embeddings-huggingface",
     "llama-index-vector-stores-postgres",
 ]
+finetune = ["datasets", "accelerate"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

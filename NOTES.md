@@ -236,3 +236,57 @@ Conclusion:
 - Not adopted: chunking changes would need answer evaluation (smaller chunks may bring back
   "right page, wrong chunk"), which requires API credit. Promising lead for future work.
 - Main index rebuilt afterwards; final-check matched final exactly.
+
+## Fine-tuning the embedding model (optional step, branch finetune-embeddings)
+
+Method:
+- Fine-tuned BAAI/bge-small-en-v1.5 on (section breadcrumb, section text) pairs built from the docs
+  (src/docs_assistant/finetune.py). Queries use the same bge prefix as at search time.
+- No evaluation questions used in training, so the retrieval eval measures generalization,
+  not memorization. Training on the same documents is intended (domain adaptation).
+- Loss: in-batch negatives (MultipleNegativesRankingLoss, cached variant), batch 32, 1 epoch,
+  learning rate 2e-5, 10% warmup, fixed seed 42. Small learning rate and one epoch to avoid
+  overwriting the model's general knowledge (catastrophic forgetting).
+- The model can be swapped via the EMBED_MODEL environment variable (default unchanged).
+  The trained model (models/) is not committed; it can be reproduced with the script.
+
+Engineering issues along the way:
+- Installing datasets pulled in pyarrow 26, which requires NumPy >= 2; newer sentence-transformers
+  imports datasets automatically, so all tests failed on import. Upgrading NumPy broke
+  llama-index-core 0.10.68 (requires numpy<2), and datasets 5.2 required pyarrow >= 24.
+  Resolved with numpy<2, pyarrow<20, datasets<4; pip check clean, lock file updated.
+- The old llama-index-core version (held back by numpy<2) also explains why hnsw_kwargs was
+  rejected in Step 26. Not upgraded, to keep the Step 26 setup reproducible.
+- First training run: MPS out of memory (batch 32, passages up to ~400 tokens, ~9 GB limit).
+  Fixed with CachedMultipleNegativesRankingLoss (mini-batches of 8, effective batch still 32)
+  and max_seq_length 256 during training. A smaller batch would mean fewer in-batch negatives.
+- Second run: "scaled_dot_product_attention for MPS does not support dropout" (dropout is only
+  active in training). Fixed with attn_implementation="eager".
+- Heavy training imports placed inside main(), so tests and CI don't need the training libraries.
+
+Data quality finding:
+- The first training example revealed an internal "LLM test file" page (_llm-test) with
+  placeholder content, present in the corpus and the search index all along.
+  Excluded from training and from search (DEFAULT_EXCLUDE, escaped as \_llm-test since "_" is a
+  LIKE wildcard). Retrieval eval after excluding it: [no change / your result].
+
+Training:
+- 1,030 pairs, 33 steps, ~3 min on MPS. Loss 1.098 -> 0.777 -> 0.613.
+
+Result (40 in-scope questions):
+| | Original | Fine-tuned |
+|---|---|---|
+| hit@1 | 0.750 | 0.700 |
+| hit@3 | 0.925 | 0.900 |
+| hit@5 | 0.950 | 0.925 |
+| recall@5 | 0.912 | 0.887 |
+| MRR | 0.834 | 0.802 |
+- 7 questions worse, 2 better; q04 and q10 still missed; new miss q35.
+
+Conclusion:
+- Negative result: training loss fell (the heading-matching task was learned), but held-out
+  retrieval got worse. Heading queries are short and use the docs' own vocabulary, unlike real
+  user questions (mismatch between training data and real use). Not adopted; the app stays on
+  the original model (final-check-2 matched final exactly).
+- Next ideas: user-style training questions per chunk (LLM-generated, needs API credit or a
+  local LLM), hard negatives, and always evaluating on the held-out eval questions.
